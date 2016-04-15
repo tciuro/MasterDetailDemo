@@ -19,3 +19,17 @@ Basically, the controller with the search bar will "jump" from the Master sectio
 
 ### See the problem?
 The controller with the search bar should be displayed in Master, but instead remains in the Detail section.
+
+### [Solved]
+Thanks to Richard Turton's [Understanding UISplitViewController](http://commandshift.co.uk/blog/2016/04/11/understanding-split-view-controller "Understanding UISplitViewController"), I found the answer:
+
+    if let primaryNav = primaryViewController as? UINavigationController,
+        secondaryNav = secondaryViewController as? UINavigationController {
+        primaryNav.viewControllers = primaryNav.viewControllers + secondaryNav.viewControllers
+        return true
+    }
+    
+I suggest reading the whole article. It's excellent.
+
+### Another issue! :-/
+If the UI expands and the detail view controller "looses" the UINavigationItem, but not permanently. Once the UI is collapsed, the UINavigationItem appears again.
