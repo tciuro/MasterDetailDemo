@@ -33,3 +33,17 @@ I suggest reading the whole article. It's excellent.
 
 ### Another issue! :-/
 If the UI expands and the detail view controller "looses" the UINavigationItem, but not permanently. Once the UI is collapsed, the UINavigationItem appears again.
+
+### [Solved]
+
+Richard saved the day. The merge with the solution can be found here: [Rebuilt secondary navigation stack on expand](https://github.com/tciuro/MasterDetailDemo/pull/2 "Rebuilt secondary navigation stack on expand")
+
+    func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+        guard let
+            primaryNav = primaryViewController as? UINavigationController,
+            secondary = primaryNav.visibleViewController
+            else { return nil }
+        // Depending on your requirements you may need to remove more than just the top view controller.
+        primaryNav.popViewControllerAnimated(false)
+        return UINavigationController(rootViewController: secondary)
+    }
