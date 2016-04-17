@@ -40,6 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         return false
     }
+    
+    func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+        guard let
+            primaryNav = primaryViewController as? UINavigationController,
+            secondary = primaryNav.visibleViewController
+            else { return nil }
+        // Depending on your requirements you may need to remove more than just the top view controller.
+        primaryNav.popViewControllerAnimated(false)
+        return UINavigationController(rootViewController: secondary)
+    }
 
 }
 
