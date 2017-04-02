@@ -14,23 +14,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
         splitViewController.delegate = self
         return true
     }
 
     // MARK: - Split view
 
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-        if let
-            primaryNav = primaryViewController as? UINavigationController,
-            secondaryNav = secondaryViewController as? UINavigationController {
-            primaryNav.viewControllers = primaryNav.viewControllers + secondaryNav.viewControllers
-            return true
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
+        if let primaryNav = primaryViewController as? UINavigationController {
+            if let secondaryNav = secondaryViewController as? UINavigationController {
+                primaryNav.viewControllers = primaryNav.viewControllers + secondaryNav.viewControllers
+                return true
+            }
         }
         guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
         guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
@@ -41,14 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return false
     }
     
-    func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
-        guard let
-            primaryNav = primaryViewController as? UINavigationController,
-            secondary = primaryNav.visibleViewController
-            else { return nil }
-        // Depending on your requirements you may need to remove more than just the top view controller.
-        primaryNav.popViewControllerAnimated(false)
-        return UINavigationController(rootViewController: secondary)
+    func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        if let primaryNav = primaryViewController as? UINavigationController {
+            if let secondary = primaryNav.visibleViewController {
+                // Depending on your requirements you may need to remove more than just the top view controller.
+                primaryNav.popViewController(animated: false)
+                return UINavigationController(rootViewController: secondary)
+            }
+        }
+        return nil
     }
 
 }
